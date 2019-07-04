@@ -24,7 +24,7 @@ function get (url, data) {
         superagent
             .get(url)
             .query(data)
-            .charset() 
+            .charset()
             .then(res => {
                 //console.log(res)
                 resolve(res)

@@ -11,7 +11,6 @@ function queryUserList() {
     return new Promise((res, rej) => {
         connection.connect();
         connection.query('select * from user', function (error, results, fields) {
-            console.log(fields)
             if (error) rej(error)
             res(results)
         })
@@ -22,16 +21,42 @@ function queryUserList() {
 /**
  *  保存69书吧的 小说 
  * @param {*} novalId 网站小说唯一键
- * @param {*} Chapters 章节列表
+ * @param {*} chapters 章节列表
  */
-function addNovalChaptersIn69 (novalSourceMergeId, Chapters) {
+function addNovalChaptersIn69 (novalSourceMergeId, chapters) {
     return new Promise((res, rej) => {
+        let list = chapters.map((item, index) => {
+            return [ item.text, item.href, novalSourceMergeId, index]
+        })
         connection.connect();
+        const sql = "INSERT INTO chapter (name, url, noval_source_merge_id, number) VALUES ?"
+        connection.query(sql, [list], function (err, rows, fields) {
+            if (err) rej(err)
+            res()
+        })
+        connection.end()
+    })
+}
+
+/**
+ * 保存内容到数据库
+ * @param {*} novalChaptersId 章节 id 
+ * @param {*} content 内容
+ */
+function addNovalChaptersContentIn69 (novalChaptersId, content) {
+    return new Promise ((res, rej) => {
+        const sql = "UPDATE chapter SET ? WHERE id = ?"
+        connection.connect();
+        connection.query(sql, [{content}, novalChaptersId], function (err, rows, fields) {
+            if (err) rej(err)
+            res()
+        })
         connection.end()
     })
 }
 
 module.exports = {
     queryUserList,
-    addNovalChaptersIn69
+    addNovalChaptersIn69,
+    addNovalChaptersContentIn69
 }

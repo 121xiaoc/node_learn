@@ -18,7 +18,6 @@ function parsePixabayData (html) {
  * @param {*} html 
  */
 function getNovalChapterIn69(html, preUrl) {
-    try{
         let data = []
         const $ = cheerio.load(html)
         $('.chapterlist').find('li').map(function(i, elm) {
@@ -30,15 +29,29 @@ function getNovalChapterIn69(html, preUrl) {
                data.push(item)
            }
         })
-        return data
-    } catch (e) {
-        console.log(2)
-        console.log(e)
-    }
+        return data;
+}
 
+/**
+ * 获取69书吧的章节内容
+ * @param {*} html html 内容
+ */
+function getNovalChapterContentIn69 (html) {
+    let data = ''
+    const $ = cheerio.load(html)
+    console.log($('#htmlContent')[0].children)
+    $('#htmlContent')[0].children.forEach(item => {
+        if (item.type === 'text') {
+            data += item.data.replace(/\s/g, '&nbsp;')
+        } else if (item.type === 'tag' && item.name === 'br') {
+            data += '<br/>'
+        }
+    })
+    return data
 }
 
 module.exports = {
     parsePixabayData,
-    getNovalChapterIn69
+    getNovalChapterIn69,
+    getNovalChapterContentIn69
 }
