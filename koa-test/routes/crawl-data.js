@@ -48,4 +48,22 @@ router.get('/test2', async (ctx, next) => {
     }) 
 })
 
+// 测试获取 单个 章节 的 内容
+router.get('/test3', async (ctx, next) => {
+    const id = 731
+    return db.selectNovelChapterContent(id).then(res => {
+        res.length > 0 && (res = res[0])
+        ctx.body = {
+            code: 200,
+            data: res
+        }
+
+    }).catch(e => {
+        ctx.body = {
+            code: 500,
+            message: e 
+        }
+    })
+})
+
 module.exports = router
