@@ -1,7 +1,7 @@
 const router = require('koa-router')()
 const api = require('../utils/request/api')
 const handleHtml = require('../utils/handleHtml')
-const db = require('../utils/db')
+const db = require('../db')
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {
     title: 'Hello Koa 2!'

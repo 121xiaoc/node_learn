@@ -1,7 +1,7 @@
 const router = require('koa-router')()
 const api = require('../utils/request/api.js')
 const handleHtml = require('../utils/handleHtml')
-const db = require('../utils/db')
+const db = require('../db')
 
 router.prefix('/crawl')
 

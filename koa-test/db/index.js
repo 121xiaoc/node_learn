@@ -68,16 +68,34 @@ function addNovalChaptersContentIn69 (novalChaptersId, content) {
  * @param {*} chapterId 
  */
 function selectNovelChapterContent (chapterId) {
+    const sql = "SELECT * FROM chapter WHERE id = ?"
+    return queryDatabase(sql, [chapterId])
+}
+
+
+/**
+ * 获取单个章节的内容
+ * @param {*} chapterId 
+ */
+function selectChapterList (novel) {
+    const sql = "SELECT * FROM chapter WHERE id = ?"
+    return queryDatabase(sql, [chapterId])
+}
+/**
+ * 操作数据库
+ * @param {*} sql String sql语句
+ * @param {*} condition Array 条件
+ */
+function queryDatabase (sql, condition) {
     return new Promise((res, rej) => {
-        const sql = "SELECT * FROM chapter WHERE id = ?"
         pool.getConnection(function(err, connection) {
             if (err) rej(err)
-            connection.query(sql, [chapterId], function(err, rows) {
+            connection.query(sql, condition, function(err, rows) {
                 connection.release();
                 if (err) rej(err)
                 res(rows)
-            });
-        });
+            })
+        })
     })
 }
 
@@ -85,5 +103,6 @@ module.exports = {
     queryUserList,
     addNovalChaptersIn69,
     addNovalChaptersContentIn69,
-    selectNovelChapterContent
+    selectNovelChapterContent,
+    queryDatabase
 }
