@@ -66,4 +66,48 @@ router.get('/test3', async (ctx, next) => {
     })
 })
 
+// 测试获取 小说的 章节列表
+router.get('/test4', async (ctx, next) => {
+    const id = 1
+    return db.selectChapterList(id).then(res => {
+        if (res.length > 0) {
+            function seek (i) {
+                var newRes = i + 5 < res.length ? res.slice(i, i + 5) : res.slice(i, res.length)
+                Promise.all(newRes.map(item => {
+                    return api.getHtmlByUrl(item.url)
+                })).then(result => {
+                    console.log('result:', result.map(item => {
+                        return item.status
+                    }))
+                    if (result.length > 0) {
+                        result.forEach((item, index) => {
+                            var data = handleHtml.getNovalChapterContentIn69(item.text)
+                            db.updateNovelChapterContent(res[i + index].id, data)
+                            // console.log(res[i + index].id, item.status)
+                        })
+                    }
+                    i + 5 < res.length ? console.log('继续') : console.log('结束')
+                    i + 5 < res.length && seek(i + 5)
+                }).catch(e => {
+                    console.log('promise.all', e)
+                }) 
+            }
+            seek(0)
+        }
+        ctx.body = {
+            code: 200,
+            data: res
+        }
+    }).catch(e => {
+        ctx.body = {
+            code: 500,
+            message: e 
+        }
+    })
+})
+
+router.get('test5', function () {
+    
+})
+
 module.exports = router

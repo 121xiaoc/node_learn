@@ -25,6 +25,7 @@ function get (url, data) {
             .get(url)
             .query(data)
             .charset()
+            .buffer(true)
             .then(res => {
                 //console.log(res)
                 resolve(res)

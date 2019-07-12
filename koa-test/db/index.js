@@ -37,7 +37,7 @@ function addNovalChaptersIn69 (novalSourceMergeId, chapters) {
             return [ item.text, item.href, novalSourceMergeId, index]
         })
         connection.connect();
-        const sql = "INSERT INTO chapter (name, url, noval_source_merge_id, number) VALUES ?"
+        const sql = "INSERT INTO chapter (name, url, novel_source_merge_id, number) VALUES ?"
         connection.query(sql, [list], function (err, rows, fields) {
             if (err) rej(err)
             res()
@@ -64,6 +64,16 @@ function addNovalChaptersContentIn69 (novalChaptersId, content) {
 }
 
 /**
+ * 更新 小说 章节的 内容
+ * @param {*} novelChapterId 
+ * @param {*} content 
+ */
+function updateNovelChapterContent (novelChapterId, content) {
+    const sql = "UPDATE chapter SET ? WHERE id = ?"
+    return queryDatabase(sql, [{content}, novelChapterId])
+}
+
+/**
  * 获取单个章节的内容
  * @param {*} chapterId 
  */
@@ -74,12 +84,12 @@ function selectNovelChapterContent (chapterId) {
 
 
 /**
- * 获取单个章节的内容
- * @param {*} chapterId 
+ * 获取 小说 的章节列表
+ * @param {*} novelSourceMergeId 小说 id
  */
-function selectChapterList (novel) {
-    const sql = "SELECT * FROM chapter WHERE id = ?"
-    return queryDatabase(sql, [chapterId])
+function selectChapterList (novelSourceMergeId) {
+    const sql = "SELECT id,name,url FROM chapter WHERE novel_source_merge_id = ?"
+    return queryDatabase(sql, [novelSourceMergeId])
 }
 /**
  * 操作数据库
@@ -104,5 +114,7 @@ module.exports = {
     addNovalChaptersIn69,
     addNovalChaptersContentIn69,
     selectNovelChapterContent,
-    queryDatabase
+    queryDatabase,
+    selectChapterList,
+    updateNovelChapterContent
 }
